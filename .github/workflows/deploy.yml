@@ -33,6 +33,10 @@ jobs:
             set ftp:ssl-allow no;
             set net:timeout 30;
             set net:max-retries 3;
+            rm -rf $FTP_PATH/.git;
+            rm -rf $FTP_PATH/.github;
+            rm -f $FTP_PATH/.gitignore;
+            rm -f $FTP_PATH/.DS_Store;
             mirror --reverse --delete --verbose \
               --exclude '^\.' \
               --exclude '^node_modules/' \
