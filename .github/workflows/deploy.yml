@@ -36,7 +36,6 @@ jobs:
             mirror --reverse --delete --verbose \
               --exclude '^\.' \
               --exclude '^node_modules/' \
-              --exclude '^vendor/' \
               ./ $FTP_PATH;
             bye
           "
