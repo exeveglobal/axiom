@@ -3,51 +3,94 @@ name: Deploy to Dev
 on:
   push:
     branches:
-      - main          # fires when dev is merged into main
+      - main
 
 concurrency:
   group: deploy-dev
-  cancel-in-progress: true   # cancel any in-flight deploy if a new push arrives
+  cancel-in-progress: true
 
 jobs:
   deploy:
-    name: FTPS Deploy → Hostinger Dev
+    name: FTP Deploy → Hostinger Dev
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0   # full history so the action can diff against the previous deploy
+        # depth 2 gives us HEAD and HEAD~1 so we can diff what changed
+        run: git clone --depth 2 --branch main "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" .
 
-      - name: Deploy via FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server:      ${{ secrets.DEV_FTP_HOST }}
-          username:    ${{ secrets.DEV_FTP_USER }}
-          password:    ${{ secrets.DEV_FTP_PASS }}
-          port:        21
-          server-dir:  ${{ secrets.DEV_FTP_PATH }}
-          # ^ e.g. /public_html/wp-content/themes/axiom/
-          # Make sure the trailing slash is present.
-          local-dir:   ./
-          protocol:    ftps
-          security:    loose
-          # 'loose' is required for Hostinger shared hosting — their shared FTP
-          # certificate does not pass strict TLS verification.
-          state-name:  .ftp-deploy-sync-state.json
-          # Tracks which files were last uploaded so only changed files are
-          # re-uploaded on subsequent deploys (not a full sync every time).
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/node_modules/**
-            **/.DS_Store
-            **/.env*
-            **/vendor/**
-            .ftp-deploy-sync-state.json
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
+      - name: Deploy via FTP
+        env:
+          FTP_HOST: ${{ secrets.DEV_FTP_HOST }}
+          FTP_USER: ${{ secrets.DEV_FTP_USER }}
+          FTP_PASS: ${{ secrets.DEV_FTP_PASS }}
+          FTP_PATH: ${{ secrets.DEV_FTP_PATH }}
+        run: |
+          set -e
+
+          FTP_HEADER="set ftp:ssl-allow no
+          set net:timeout 30
+          set net:max-retries 3"
+
+          # ── Initial deploy: no parent commit exists ───────────────────────────
+          if ! git rev-parse HEAD~1 >/dev/null 2>&1; then
+            echo "Initial deploy — uploading all files via mirror."
+            SCRIPT=$(mktemp)
+            printf '%s\n' "$FTP_HEADER" > "$SCRIPT"
+            printf 'mirror --reverse --delete --verbose --exclude "^\\." ./ %s\n' "$FTP_PATH" >> "$SCRIPT"
+            printf 'bye\n' >> "$SCRIPT"
+            lftp -u "$FTP_USER,$FTP_PASS" "ftp://$FTP_HOST" -f "$SCRIPT"
+            rm -f "$SCRIPT"
+            exit 0
+          fi
+
+          # ── Incremental deploy ────────────────────────────────────────────────
+          # Files to upload: added (A), copied (C), modified (M), renamed new path (R→col3)
+          UPLOAD=$(git diff --name-status --diff-filter=ACMR HEAD~1 HEAD \
+            | awk '/^[ACM]/{print $2} /^R/{print $3}' \
+            | grep -Ev '^(\.git|\.github|\.gitignore|\.DS_Store)' || true)
+
+          # Files to remove: deleted (D), renamed old path (R→col2)
+          DELETE=$(git diff --name-status --diff-filter=DR HEAD~1 HEAD \
+            | awk '/^D/{print $2} /^R/{print $2}' \
+            | grep -Ev '^(\.git|\.github|\.gitignore|\.DS_Store)' || true)
+
+          if [ -z "$UPLOAD" ] && [ -z "$DELETE" ]; then
+            echo "No deployable file changes — skipping FTP."
+            exit 0
+          fi
+
+          # Build an lftp script file (avoids argument-length limits and quoting issues)
+          SCRIPT=$(mktemp)
+          printf '%s\n' "$FTP_HEADER" > "$SCRIPT"
+
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            dir=$(dirname "$file")
+            # Create the remote directory tree if the file is nested
+            if [ "$dir" != "." ]; then
+              printf 'mkdir -p "%s/%s"\n' "$FTP_PATH" "$dir" >> "$SCRIPT"
+            fi
+            printf 'put "%s" -o "%s/%s"\n' "$file" "$FTP_PATH" "$file" >> "$SCRIPT"
+          done <<< "$UPLOAD"
+
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            printf 'rm -f "%s/%s"\n' "$FTP_PATH" "$file" >> "$SCRIPT"
+          done <<< "$DELETE"
+
+          printf 'bye\n' >> "$SCRIPT"
+
+          echo "=== FTP deploy plan ==="
+          cat "$SCRIPT"
+          echo "======================="
+
+          lftp -u "$FTP_USER,$FTP_PASS" "ftp://$FTP_HOST" -f "$SCRIPT"
+          rm -f "$SCRIPT"
 
       - name: Notify on success
         if: success()
@@ -55,4 +98,4 @@ jobs:
 
       - name: Notify on failure
         if: failure()
-        run: echo "❌ Deploy failed — check FTP secrets and server-dir path in repo Settings → Secrets."
+        run: echo "❌ Deploy failed — check FTP secrets in repo Settings → Secrets."
