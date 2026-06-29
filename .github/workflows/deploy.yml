@@ -32,10 +32,8 @@ jobs:
           # ^ e.g. /public_html/wp-content/themes/axiom/
           # Make sure the trailing slash is present.
           local-dir:   ./
-          protocol:    ftps
-          security:    loose
-          # 'loose' is required for Hostinger shared hosting — their shared FTP
-          # certificate does not pass strict TLS verification.
+          protocol:    ftp
+          # Hostinger shared hosting does not support FTPS explicit TLS on port 21.
           state-name:  .ftp-deploy-sync-state.json
           # Tracks which files were last uploaded so only changed files are
           # re-uploaded on subsequent deploys (not a full sync every time).
