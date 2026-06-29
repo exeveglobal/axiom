@@ -85,10 +85,12 @@ abstract class Abstract_Section {
 			'media' => $wp_customize->add_control(
 				new \WP_Customize_Media_Control( $wp_customize, $full_id, $control_args )
 			),
-			'range' => $wp_customize->add_control( $full_id, array_merge( $control_args, [
-				'type'        => 'range',
-				'input_attrs' => $config['input_attrs'] ?? [ 'min' => 0, 'max' => 100, 'step' => 1 ],
-			] ) ),
+			'range' => $wp_customize->add_control(
+				new \Axiom\Customizer\Range_Control( $wp_customize, $full_id, array_merge( $control_args, [
+					'input_attrs' => $config['input_attrs'] ?? [ 'min' => 0, 'max' => 100, 'step' => 1 ],
+					'unit'        => $config['unit'] ?? '',
+				] ) )
+			),
 			'select' => $wp_customize->add_control( $full_id, array_merge( $control_args, [
 				'type'    => 'select',
 				'choices' => $config['choices'] ?? [],

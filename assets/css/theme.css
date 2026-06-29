@@ -285,6 +285,10 @@ small      { font-size: 80%; }
 .axiom-ptb--center { text-align: center; }
 .axiom-ptb--right  { text-align: right; }
 
+/* Breadcrumb (flex row) follows the same alignment as title/subtitle */
+.axiom-ptb--center .axiom-breadcrumb__list { justify-content: center; }
+.axiom-ptb--right  .axiom-breadcrumb__list { justify-content: flex-end; }
+
 .axiom-ptb__overlay {
 	position: absolute;
 	inset: 0;
