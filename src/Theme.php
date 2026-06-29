@@ -41,6 +41,7 @@ final class Theme {
 		$this->hooks
 			->action( 'after_setup_theme',                  [ $this, 'setup' ] )
 			->action( 'after_setup_theme',                  [ $this, 'content_width' ], 0 )
+			->action( 'init',                               [ $this, 'register_modules' ], 5 )
 			->action( 'widgets_init',                       [ $this, 'register_widgets' ] )
 			->action( 'wp_enqueue_scripts',                 [ $assets, 'enqueue_frontend' ] )
 			->action( 'admin_enqueue_scripts',              [ $assets, 'enqueue_admin' ] )
@@ -49,7 +50,9 @@ final class Theme {
 			->action( 'customize_controls_enqueue_scripts', [ $customizer, 'enqueue_controls' ] )
 			->action( 'wp_head',                            [ $customizer, 'output_css_variables' ], 5 )
 			->register();
+	}
 
+	public function register_modules(): void {
 		( new Performance_Module() )->register();
 		( new Schema_Module() )->register();
 		( new Meta_Module() )->register();
