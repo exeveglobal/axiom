@@ -43,7 +43,7 @@ jobs:
             printf '%s\n' "$FTP_HEADER" > "$SCRIPT"
             printf 'mirror --reverse --delete --verbose --exclude "^\\." ./ %s\n' "$FTP_PATH" >> "$SCRIPT"
             printf 'bye\n' >> "$SCRIPT"
-            lftp -u "$FTP_USER,$FTP_PASS" "ftp://$FTP_HOST" -f "$SCRIPT"
+            lftp -u "$FTP_USER,$FTP_PASS" "ftp://$FTP_HOST" < "$SCRIPT"
             rm -f "$SCRIPT"
             exit 0
           fi
@@ -89,7 +89,7 @@ jobs:
           cat "$SCRIPT"
           echo "======================="
 
-          lftp -u "$FTP_USER,$FTP_PASS" "ftp://$FTP_HOST" -f "$SCRIPT"
+          lftp -u "$FTP_USER,$FTP_PASS" "ftp://$FTP_HOST" < "$SCRIPT"
           rm -f "$SCRIPT"
 
       - name: Notify on success
