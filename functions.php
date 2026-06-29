@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AXIOM_VERSION', '1.0.0' );
+define( 'AXIOM_VERSION', '1.1.0' );
 define( 'AXIOM_PATH', get_template_directory() );
 define( 'AXIOM_URL', get_template_directory_uri() );
 define( 'AXIOM_SRC', AXIOM_PATH . '/src' );
