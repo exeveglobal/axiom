@@ -1,0 +1,436 @@
+/* =============================================================================
+   Axiom Theme — theme.css
+   All values reference CSS custom properties set by the Customizer.
+   No hardcoded colours or sizes. No utility classes. Structural only.
+   ============================================================================= */
+
+/* ── Reset ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+	line-height: 1.15;
+	-webkit-text-size-adjust: 100%;
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	background-color: var(--axiom-color-bg, #fff);
+	color: var(--axiom-color-text, #1a1a1a);
+	font-family: var(--axiom-font-body, system-ui, -apple-system, sans-serif);
+	font-size: var(--axiom-font-size-base, 1rem);
+	line-height: var(--axiom-line-height-base, 1.6);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	/* EXEVE brand palette — overridden at runtime by the Customizer :root block */
+	--axiom-color-brand-orange:  #FE4C1C;
+	--axiom-color-brand-red:     #D9302D;
+	--axiom-color-brand-blue:    #1754F1;
+	--axiom-color-brand-cyan:    #00C3FF;
+	--axiom-color-tint-orange:   #FFEBE6;
+	--axiom-color-tint-red:      #FFF3E9;
+	--axiom-color-tint-blue:     #EAF3FF;
+	--axiom-color-tint-cyan:     #E3F7FD;
+	--axiom-color-primary:       #FE4C1C;
+	--axiom-color-accent:        #1754F1;
+	--axiom-color-link:          #FE4C1C;
+	--axiom-color-link-hover:    #D9302D;
+}
+
+/* ── Typography ─────────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--axiom-font-heading, inherit);
+	font-weight: var(--axiom-font-weight-heading, 600);
+	line-height: 1.2;
+	letter-spacing: var(--axiom-letter-spacing-heading, -0.02em);
+	color: inherit;
+	margin-block: 0.5rem 1rem;
+}
+
+h1 { font-size: var(--axiom-font-size-h1, 2.5rem); }
+h2 { font-size: var(--axiom-font-size-h2, 2rem); }
+h3 { font-size: var(--axiom-font-size-h3, 1.5rem); }
+h4 { font-size: var(--axiom-font-size-h4, 1.25rem); }
+h5 { font-size: var(--axiom-font-size-h5, 1.1rem); }
+h6 { font-size: var(--axiom-font-size-h6, 1rem); }
+
+p { margin-block: 0 0.9rem; }
+
+a {
+	color: var(--axiom-color-link, var(--axiom-color-primary));
+	text-decoration: none;
+}
+a:hover, a:focus {
+	color: var(--axiom-color-link-hover, var(--axiom-color-accent));
+	text-decoration: underline;
+}
+
+img, video { height: auto; max-width: 100%; display: block; }
+strong, b  { font-weight: 700; }
+small      { font-size: 80%; }
+
+/* ── Layout ─────────────────────────────────────────────────────────────────── */
+.axiom-site-content {
+	min-height: 60vh;
+}
+
+.axiom-main {
+	max-width: var(--axiom-content-width, 800px);
+	margin-inline: auto;
+	padding-inline: var(--axiom-container-padding, 1.5rem);
+	padding-block: 3rem;
+}
+
+/* Wide / full alignment for page builders */
+.alignwide  { margin-inline: calc( (var(--axiom-content-width, 800px) - var(--axiom-wide-width, 1200px)) / 2 ); }
+.alignfull  { margin-inline: calc(50% - 50vw); max-width: 100vw; width: 100vw; }
+
+@media (max-width: 640px) {
+	.axiom-main {
+		padding-inline: var(--axiom-container-padding-mobile, 1rem);
+	}
+}
+
+/* ── Accessibility ──────────────────────────────────────────────────────────── */
+.screen-reader-text,
+.axiom-skip-link {
+	clip: rect(1px, 1px, 1px, 1px);
+	height: 1px;
+	overflow: hidden;
+	position: absolute !important;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+.axiom-skip-link:focus,
+.screen-reader-text:focus {
+	clip: auto !important;
+	height: auto;
+	left: 6px;
+	top: 6px;
+	width: auto;
+	z-index: 100000;
+	background: var(--axiom-color-bg);
+	color: var(--axiom-color-text);
+	border: 2px solid var(--axiom-color-primary);
+	border-radius: 3px;
+	padding: 0.75rem 1.5rem;
+	text-decoration: none;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────────── */
+.axiom-header {
+	background-color: var(--axiom-header-bg, #fff);
+	color: var(--axiom-header-color, #0a0a0a);
+	padding-block: var(--axiom-header-padding-y, 1rem);
+	position: relative;
+	z-index: 100;
+}
+
+.axiom-header.has-border {
+	border-bottom: 1px solid var(--axiom-header-border-color, #e5e7eb);
+}
+
+.axiom-header.is-sticky {
+	position: sticky;
+	top: 0;
+	transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.25s ease;
+}
+
+.axiom-header.is-sticky.is-scrolled {
+	box-shadow: 0 1px 12px rgba(0,0,0,.08);
+	background-color: var(--axiom-header-sticky-bg, var(--axiom-header-bg, #fff));
+}
+
+.axiom-header.is-sticky.is-hidden {
+	transform: translateY(-110%);
+}
+
+.axiom-header__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+	max-width: var(--axiom-wide-width, 1200px);
+	margin-inline: auto;
+	padding-inline: var(--axiom-container-padding, 1.5rem);
+}
+
+.axiom-header.is-full-width .axiom-header__inner {
+	max-width: 100%;
+}
+
+/* Layout variants */
+.axiom-header.layout-inverted .axiom-header__inner { flex-direction: row-reverse; }
+.axiom-header.layout-stacked .axiom-header__inner  { flex-direction: column; text-align: center; }
+
+/* Branding */
+.axiom-header__branding img  { max-width: var(--axiom-header-logo-width, 160px); height: auto; }
+.axiom-header__site-name     { font-size: 1.25rem; font-weight: 700; color: inherit; text-decoration: none; }
+
+/* Desktop nav */
+.axiom-nav--desktop .axiom-nav__list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.axiom-nav--desktop .axiom-nav__list li a {
+	display: block;
+	padding: 0.5rem var(--axiom-nav-spacing, 1.25rem);
+	font-family: var(--axiom-font-nav, inherit);
+	font-size: var(--axiom-font-size-nav, 0.9375rem);
+	font-weight: var(--axiom-font-weight-nav, 500);
+	color: var(--axiom-header-color, inherit);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.axiom-nav--desktop .axiom-nav__list li a:hover {
+	color: var(--axiom-color-accent);
+}
+
+/* Submenu */
+.axiom-nav--desktop .axiom-nav__list li { position: relative; }
+.axiom-nav--desktop .axiom-nav__list li ul {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	min-width: 160px;
+	background: var(--axiom-header-bg, #fff);
+	border: 1px solid var(--axiom-color-border, #e5e7eb);
+	border-radius: 4px;
+	z-index: 200;
+	list-style: none;
+	margin: 0;
+	padding: 0.25rem 0;
+}
+.axiom-nav--desktop .axiom-nav__list li:hover > ul,
+.axiom-nav--desktop .axiom-nav__list li:focus-within > ul { display: block; }
+.axiom-nav--desktop .axiom-nav__list li ul li a { padding: 0.5rem 1rem; display: block; }
+
+/* Hamburger toggle */
+.axiom-nav-toggle {
+	display: none;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0.5rem;
+	color: var(--axiom-header-color, #0a0a0a);
+}
+
+.axiom-nav-toggle__icon,
+.axiom-nav-toggle__icon::before,
+.axiom-nav-toggle__icon::after {
+	display: block;
+	width: 22px;
+	height: 2px;
+	background-color: currentColor;
+	border-radius: 2px;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.axiom-nav-toggle__icon { position: relative; }
+.axiom-nav-toggle__icon::before,
+.axiom-nav-toggle__icon::after { content: ''; position: absolute; left: 0; }
+.axiom-nav-toggle__icon::before { top: -6px; }
+.axiom-nav-toggle__icon::after  { top:  6px; }
+
+.axiom-nav-toggle[aria-expanded="true"] .axiom-nav-toggle__icon { background: transparent; }
+.axiom-nav-toggle[aria-expanded="true"] .axiom-nav-toggle__icon::before { transform: translateY(6px) rotate(45deg); }
+.axiom-nav-toggle[aria-expanded="true"] .axiom-nav-toggle__icon::after  { transform: translateY(-6px) rotate(-45deg); }
+
+/* Mobile nav */
+.axiom-nav--mobile {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	background: var(--axiom-header-bg, #fff);
+	border-top: 1px solid var(--axiom-color-border, #e5e7eb);
+	z-index: 99;
+}
+
+.axiom-nav--mobile:not([aria-hidden="true"]) { display: block; }
+
+.axiom-nav--mobile .axiom-nav__list {
+	list-style: none;
+	margin: 0;
+	padding: 0.5rem 0;
+}
+
+.axiom-nav--mobile .axiom-nav__list li a {
+	display: block;
+	padding: 0.75rem var(--axiom-container-padding, 1.5rem);
+	color: var(--axiom-header-color, #0a0a0a);
+	text-decoration: none;
+	border-bottom: 1px solid var(--axiom-color-border, #e5e7eb);
+}
+
+/* ── Page Title Bar ──────────────────────────────────────────────────────────── */
+.axiom-ptb {
+	position: relative;
+	background-color: var(--axiom-ptb-bg, var(--axiom-color-bg-alt, #f9fafb));
+	padding-block: var(--axiom-ptb-padding-y, 3rem);
+}
+
+.axiom-ptb--image { background-size: cover; background-position: center; }
+.axiom-ptb--center { text-align: center; }
+.axiom-ptb--right  { text-align: right; }
+
+.axiom-ptb__overlay {
+	position: absolute;
+	inset: 0;
+	background-color: var(--axiom-ptb-overlay-color, #0a0a0a);
+	opacity: var(--axiom-ptb-overlay-opacity, 0.4);
+	pointer-events: none;
+}
+
+.axiom-ptb__inner {
+	position: relative;
+	max-width: var(--axiom-wide-width, 1200px);
+	margin-inline: auto;
+	padding-inline: var(--axiom-container-padding, 1.5rem);
+}
+
+.axiom-ptb__title {
+	color: var(--axiom-ptb-title-color, var(--axiom-color-text));
+	margin-block: 0 0.5rem;
+}
+
+.axiom-ptb__subtitle {
+	color: var(--axiom-ptb-subtitle-color, var(--axiom-color-muted));
+	margin-block: 0;
+	font-size: 1.1rem;
+}
+
+/* ── Breadcrumb ─────────────────────────────────────────────────────────────── */
+.axiom-breadcrumb { margin-block-end: 0.75rem; }
+.axiom-breadcrumb__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	font-size: 0.875rem;
+	color: var(--axiom-ptb-breadcrumb-color, var(--axiom-color-muted));
+}
+
+.axiom-breadcrumb__item + .axiom-breadcrumb__item::before {
+	content: '/';
+	margin-inline-end: 0.25rem;
+	opacity: 0.5;
+}
+
+.axiom-breadcrumb__link { color: inherit; }
+.axiom-breadcrumb__link:hover { color: var(--axiom-color-accent); text-decoration: underline; }
+
+/* ── Footer ─────────────────────────────────────────────────────────────────── */
+.axiom-footer {
+	background-color: var(--axiom-footer-bg, #f9fafb);
+	color: var(--axiom-footer-color, #4a4a4a);
+	padding-block: var(--axiom-footer-padding-y, 2rem);
+}
+
+.axiom-footer.has-border { border-top: 1px solid var(--axiom-footer-border-color, #e5e7eb); }
+
+.axiom-footer__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	max-width: var(--axiom-wide-width, 1200px);
+	margin-inline: auto;
+	padding-inline: var(--axiom-container-padding, 1.5rem);
+}
+
+.axiom-footer.is-full-width .axiom-footer__inner { max-width: 100%; }
+.axiom-footer.layout-stacked .axiom-footer__inner { flex-direction: column; text-align: center; }
+
+.axiom-footer__branding img { max-height: 40px; width: auto; }
+.axiom-footer__site-name    { font-weight: 600; }
+
+.axiom-footer__nav-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.axiom-footer__nav-list li a {
+	display: block;
+	padding: 0.25rem 0.75rem;
+	color: var(--axiom-footer-color);
+	font-size: 0.875rem;
+}
+
+.axiom-footer__nav-list li a:hover { color: var(--axiom-color-accent); text-decoration: underline; }
+
+.axiom-footer__copyright p { margin: 0; font-size: 0.875rem; }
+
+/* ── Archive cards ──────────────────────────────────────────────────────────── */
+.axiom-archive { display: grid; gap: 2rem; }
+.axiom-card    { display: flex; flex-direction: column; border: 1px solid var(--axiom-color-border, #e5e7eb); border-radius: 6px; overflow: hidden; }
+.axiom-card__thumbnail img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.axiom-card__body { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.axiom-card__title { font-size: 1.25rem; margin: 0; }
+.axiom-card__title a { color: inherit; text-decoration: none; }
+.axiom-card__title a:hover { color: var(--axiom-color-accent); }
+.axiom-card__date { font-size: 0.8rem; color: var(--axiom-color-muted); }
+.axiom-card__excerpt p { margin: 0; }
+
+/* ── 404 ────────────────────────────────────────────────────────────────────── */
+.axiom-404 { text-align: center; padding-block: 4rem; }
+.axiom-404__title   { font-size: 3rem; margin-block-end: 1rem; }
+.axiom-404__message { color: var(--axiom-color-muted); margin-block-end: 2rem; }
+
+/* ── Pagination ─────────────────────────────────────────────────────────────── */
+.nav-links { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-block: 2rem; }
+.page-numbers {
+	padding: 0.375rem 0.75rem;
+	border: 1px solid var(--axiom-color-border);
+	border-radius: 3px;
+	color: var(--axiom-color-text);
+	text-decoration: none;
+	font-size: 0.875rem;
+}
+.page-numbers.current { background: var(--axiom-color-primary); color: var(--axiom-color-bg); border-color: var(--axiom-color-primary); }
+.page-numbers:hover   { border-color: var(--axiom-color-primary); color: var(--axiom-color-primary); }
+
+/* ── WP Block alignment ─────────────────────────────────────────────────────── */
+.wp-block-image img { border-radius: 4px; }
+.wp-caption-text    { font-size: 0.8rem; color: var(--axiom-color-muted); text-align: center; margin-block-start: 0.5rem; }
+
+/* ── Print ──────────────────────────────────────────────────────────────────── */
+@media print {
+	.axiom-header, .axiom-footer, .axiom-nav-toggle, .axiom-breadcrumb { display: none !important; }
+	a[href]::after { content: " (" attr(href) ")"; font-size: 80%; }
+}
+
+/* ── Mobile responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+	.axiom-nav--desktop { display: none; }
+	.axiom-nav-toggle   { display: flex; align-items: center; justify-content: center; }
+	.axiom-footer__inner { flex-direction: column; text-align: center; }
+	.axiom-footer__nav-list { justify-content: center; }
+	.axiom-archive { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 768px) {
+	.axiom-archive { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+	.axiom-archive { grid-template-columns: repeat(3, 1fr); }
+}

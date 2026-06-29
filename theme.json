@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "useRootPaddingAwareAlignments": true,
+    "layout": {
+      "contentSize": "var(--axiom-content-width, 800px)",
+      "wideSize": "var(--axiom-wide-width, 1200px)"
+    },
+    "color": {
+      "custom": true,
+      "customDuotone": false,
+      "customGradient": true,
+      "defaultDuotone": false,
+      "defaultGradients": false,
+      "defaultPalette": false,
+      "link": true
+    },
+    "typography": {
+      "customFontSize": true,
+      "dropCap": false,
+      "fontStyle": true,
+      "fontWeight": true,
+      "letterSpacing": true,
+      "lineHeight": true,
+      "textDecoration": true,
+      "textTransform": true,
+      "defaultFontSizes": false
+    },
+    "spacing": {
+      "defaultSpacingSizes": false,
+      "margin": true,
+      "padding": true,
+      "units": [ "%", "px", "em", "rem", "vh", "vw" ]
+    },
+    "blocks": {
+      "core/image": {
+        "lightbox": { "allowEditing": true }
+      }
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var(--axiom-color-bg)",
+      "text": "var(--axiom-color-text)"
+    },
+    "typography": {
+      "fontFamily": "var(--axiom-font-body)",
+      "fontSize": "var(--axiom-font-size-base)",
+      "lineHeight": "var(--axiom-line-height-base)"
+    },
+    "elements": {
+      "link": {
+        "color": { "text": "var(--axiom-color-primary)" },
+        ":hover": { "color": { "text": "var(--axiom-color-accent)" } }
+      },
+      "h1": { "typography": { "fontSize": "var(--axiom-font-size-h1)" } },
+      "h2": { "typography": { "fontSize": "var(--axiom-font-size-h2)" } },
+      "h3": { "typography": { "fontSize": "var(--axiom-font-size-h3)" } },
+      "h4": { "typography": { "fontSize": "var(--axiom-font-size-h4)" } },
+      "h5": { "typography": { "fontSize": "var(--axiom-font-size-h5)" } },
+      "h6": { "typography": { "fontSize": "var(--axiom-font-size-h6)" } }
+    }
+  }
+}

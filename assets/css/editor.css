@@ -1,0 +1,27 @@
+/* =============================================================================
+   Axiom — editor.css   (loaded inside the block editor via add_editor_style)
+   Mirrors theme.css typography so the editor matches the frontend.
+   ============================================================================= */
+
+body {
+	font-family: var(--axiom-font-body, system-ui, -apple-system, sans-serif);
+	font-size: var(--axiom-font-size-base, 1rem);
+	line-height: var(--axiom-line-height-base, 1.6);
+	color: var(--axiom-color-text, #1a1a1a);
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--axiom-font-heading, inherit);
+	font-weight: var(--axiom-font-weight-heading, 600);
+	letter-spacing: var(--axiom-letter-spacing-heading, -0.02em);
+	line-height: 1.2;
+}
+
+h1 { font-size: var(--axiom-font-size-h1, 2.5rem); }
+h2 { font-size: var(--axiom-font-size-h2, 2rem); }
+h3 { font-size: var(--axiom-font-size-h3, 1.5rem); }
+h4 { font-size: var(--axiom-font-size-h4, 1.25rem); }
+h5 { font-size: var(--axiom-font-size-h5, 1.1rem); }
+h6 { font-size: var(--axiom-font-size-h6, 1rem); }
+
+a { color: var(--axiom-color-link, var(--axiom-color-primary, #2563eb)); }

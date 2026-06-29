@@ -1,0 +1,51 @@
+name: Deploy to Dev
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: FTP Deploy → Dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2   # needed for changed-files diff
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server:           ${{ secrets.DEV_FTP_HOST }}
+          username:         ${{ secrets.DEV_FTP_USER }}
+          password:         ${{ secrets.DEV_FTP_PASS }}
+          port:             ${{ secrets.DEV_FTP_PORT || 21 }}
+          server-dir:       ${{ secrets.DEV_FTP_PATH }}   # e.g. /public_html/wp-content/themes/axiom/
+          local-dir:        ./
+          protocol:         ftps          # use 'ftp' if your host does not support FTPS
+          security:         strict
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/node_modules/**
+            **/.DS_Store
+            **/.env*
+            **/vendor/**
+            README.md
+
+      - name: Notify on success
+        if: success()
+        run: echo "✅ Axiom deployed to dev at $(date -u '+%Y-%m-%d %H:%M UTC')"
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "❌ Deploy failed. Check FTP credentials and server path in repo secrets."
