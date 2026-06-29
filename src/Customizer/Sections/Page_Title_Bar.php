@@ -19,6 +19,13 @@ final class Page_Title_Bar extends Abstract_Section {
 			'default'   => true,
 			'transport' => 'refresh',
 		],
+		'ptb_hide_on_front' => [
+			'label'     => 'Hide on Homepage',
+			'type'      => 'checkbox',
+			'default'   => false,
+			'transport' => 'refresh',
+			'active_cb' => 'ptb_enabled',
+		],
 		'ptb_alignment' => [
 			'label'     => 'Alignment',
 			'type'      => 'radio',
