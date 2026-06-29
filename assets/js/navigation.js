@@ -1,69 +1,93 @@
 /**
- * Axiom Navigation — vanilla JS, no jQuery, no build step required.
- * Handles: mobile menu toggle, sticky header, auto-hide on scroll.
+ * Axiom Navigation — vanilla JS, no jQuery, no build step.
+ * Mobile nav: left-side drawer with backdrop.
+ * Sticky header: scroll-driven show / hide.
  */
 
 ( function () {
 	'use strict';
 
-	const header   = document.getElementById( 'axiom-header' );
-	const toggle   = header?.querySelector( '.axiom-nav-toggle' );
+	const header    = document.getElementById( 'axiom-header' );
+	const toggle    = header?.querySelector( '.axiom-nav-toggle' );
 	const mobileNav = document.getElementById( 'axiom-mobile-nav' );
 
-	// ── Mobile menu toggle ──────────────────────────────────────────────────
+	// ── Mobile drawer ───────────────────────────────────────────────────────
 	if ( toggle && mobileNav ) {
-		const breakpoint = parseInt( toggle.dataset.breakpoint || '768', 10 );
+
+		// Backdrop — sits behind the drawer, click to close
+		const backdrop = document.createElement( 'div' );
+		backdrop.className = 'axiom-nav-backdrop';
+		backdrop.setAttribute( 'aria-hidden', 'true' );
+		document.body.appendChild( backdrop );
+
+		// Close button — injected at the top of the drawer
+		const closeBtn = document.createElement( 'button' );
+		closeBtn.className = 'axiom-nav-close';
+		closeBtn.setAttribute( 'aria-label', 'Close menu' );
+		closeBtn.innerHTML = '&#x2715;'; // ✕
+		mobileNav.prepend( closeBtn );
 
 		function openMenu() {
 			toggle.setAttribute( 'aria-expanded', 'true' );
-			toggle.setAttribute( 'aria-label', toggle.dataset.labelClose || 'Close menu' );
 			mobileNav.setAttribute( 'aria-hidden', 'false' );
 			mobileNav.removeAttribute( 'inert' );
+			mobileNav.classList.add( 'is-open' );
+			backdrop.classList.add( 'is-visible' );
+			document.body.style.overflow = 'hidden';
+			// Focus the close button for keyboard users
+			closeBtn.focus();
 		}
 
 		function closeMenu() {
 			toggle.setAttribute( 'aria-expanded', 'false' );
-			toggle.setAttribute( 'aria-label', toggle.dataset.labelOpen || 'Open menu' );
 			mobileNav.setAttribute( 'aria-hidden', 'true' );
 			mobileNav.setAttribute( 'inert', '' );
+			mobileNav.classList.remove( 'is-open' );
+			backdrop.classList.remove( 'is-visible' );
+			document.body.style.overflow = '';
+			toggle.focus();
 		}
 
 		toggle.addEventListener( 'click', function () {
-			const expanded = toggle.getAttribute( 'aria-expanded' ) === 'true';
-			expanded ? closeMenu() : openMenu();
+			toggle.getAttribute( 'aria-expanded' ) === 'true' ? closeMenu() : openMenu();
 		} );
 
-		// Close on Escape
+		closeBtn.addEventListener( 'click', closeMenu );
+		backdrop.addEventListener( 'click', closeMenu );
+
+		// Escape key
 		document.addEventListener( 'keydown', function ( e ) {
-			if ( e.key === 'Escape' ) closeMenu();
+			if ( e.key === 'Escape' && toggle.getAttribute( 'aria-expanded' ) === 'true' ) {
+				closeMenu();
+			}
 		} );
 
-		// Close if viewport grows past breakpoint
-		const mq = window.matchMedia( `(min-width: ${ breakpoint }px)` );
-		mq.addEventListener( 'change', function ( e ) {
+		// Auto-close if viewport widens past mobile breakpoint
+		window.matchMedia( '(min-width: 768px)' ).addEventListener( 'change', function ( e ) {
 			if ( e.matches ) closeMenu();
 		} );
 	}
 
 	// ── Sticky + auto-hide ──────────────────────────────────────────────────
 	if ( header?.classList.contains( 'is-sticky' ) ) {
-		const autohide   = header.classList.contains( 'is-autohide' );
-		let lastScrollY  = window.scrollY;
-		let ticking      = false;
+		const autohide  = header.classList.contains( 'is-autohide' );
+		let lastScrollY = window.scrollY;
+		let ticking     = false;
 
 		function onScroll() {
-			const currentY = window.scrollY;
+			const y = window.scrollY;
+
+			header.classList.toggle( 'is-scrolled', y > 10 );
 
 			if ( autohide ) {
-				if ( currentY > lastScrollY && currentY > 80 ) {
+				if ( y > lastScrollY && y > 80 ) {
 					header.classList.add( 'is-hidden' );
 				} else {
 					header.classList.remove( 'is-hidden' );
 				}
 			}
 
-			header.classList.toggle( 'is-scrolled', currentY > 10 );
-			lastScrollY = currentY;
+			lastScrollY = y;
 			ticking = false;
 		}
 
