@@ -1,0 +1,43 @@
+/* =============================================================================
+   Axiom Customizer Controls — loaded only inside the Customizer panel.
+   ============================================================================= */
+
+/* ── Range control ──────────────────────────────────────────────────────────── */
+.axiom-range-wrap {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 6px;
+}
+
+.axiom-range-slider {
+	flex: 1 1 0;
+	min-width: 0;
+	cursor: pointer;
+	accent-color: #1754F1; /* axiom-color-brand-blue */
+}
+
+.axiom-range-number {
+	width: 62px;
+	padding: 4px 6px;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	text-align: center;
+	font-size: 12px;
+	line-height: 1.4;
+	-moz-appearance: textfield;
+}
+
+/* Hide browser-native spinner arrows on the number input */
+.axiom-range-number::-webkit-inner-spin-button,
+.axiom-range-number::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.axiom-range-unit {
+	font-size: 11px;
+	color: #666;
+	white-space: nowrap;
+	min-width: 24px;
+}

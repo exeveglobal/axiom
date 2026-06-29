@@ -97,6 +97,13 @@ final class Manager {
 	}
 
 	public function enqueue_controls(): void {
+		wp_enqueue_style(
+			'axiom-customizer-controls',
+			AXIOM_ASSETS_URL . '/css/customizer.css',
+			[],
+			AXIOM_VERSION
+		);
+
 		wp_enqueue_script(
 			'axiom-customizer-controls',
 			AXIOM_ASSETS_URL . '/js/customizer-controls.js',
