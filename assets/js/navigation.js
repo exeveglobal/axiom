@@ -14,6 +14,11 @@
 	// ── Mobile drawer ───────────────────────────────────────────────────────
 	if ( toggle && mobileNav ) {
 
+		// Move the drawer to <body> so it escapes the header's stacking context.
+		// The header has z-index:200 and creates its own stacking context, which
+		// would place the drawer beneath a body-level backdrop at z-index:299.
+		document.body.appendChild( mobileNav );
+
 		// Backdrop — sits behind the drawer, click to close
 		const backdrop = document.createElement( 'div' );
 		backdrop.className = 'axiom-nav-backdrop';
