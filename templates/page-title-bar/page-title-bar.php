@@ -17,6 +17,10 @@ if ( ! get_theme_mod( 'axiom_ptb_enabled', true ) ) {
 	return;
 }
 
+if ( is_front_page() && get_theme_mod( 'axiom_ptb_hide_on_front', false ) ) {
+	return;
+}
+
 if ( '1' === get_post_meta( $post_id, '_axiom_hide_title_bar', true ) ) {
 	return;
 }
