@@ -17,35 +17,34 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0   # full history so the action can diff against the previous deploy
+        uses: actions/checkout@v4.2.2
 
-      - name: Deploy via FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server:      ${{ secrets.DEV_FTP_HOST }}
-          username:    ${{ secrets.DEV_FTP_USER }}
-          password:    ${{ secrets.DEV_FTP_PASS }}
-          port:        21
-          server-dir:  ${{ secrets.DEV_FTP_PATH }}
-          # ^ e.g. /public_html/wp-content/themes/axiom/
-          # Make sure the trailing slash is present.
-          local-dir:   ./
-          protocol:    ftp
-          # Hostinger shared hosting does not support FTPS explicit TLS on port 21.
-          state-name:  .ftp-deploy-sync-state.json
-          # Tracks which files were last uploaded so only changed files are
-          # re-uploaded on subsequent deploys (not a full sync every time).
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/node_modules/**
-            **/.DS_Store
-            **/.env*
-            **/vendor/**
-            .ftp-deploy-sync-state.json
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
+      - name: Deploy via FTP
+        env:
+          FTP_HOST: ${{ secrets.DEV_FTP_HOST }}
+          FTP_USER: ${{ secrets.DEV_FTP_USER }}
+          FTP_PASS: ${{ secrets.DEV_FTP_PASS }}
+          FTP_PATH: ${{ secrets.DEV_FTP_PATH }}
+        run: |
+          lftp -c "
+            set ftp:ssl-allow no;
+            set net:timeout 30;
+            set net:max-retries 3;
+            set net:reconnect-interval-base 5;
+            open -u '$FTP_USER','$FTP_PASS' '$FTP_HOST';
+            mirror --reverse --delete --verbose \
+              --exclude-glob .git \
+              --exclude-glob .github \
+              --exclude-glob .DS_Store \
+              --exclude-glob '*.env*' \
+              --exclude-glob node_modules \
+              --exclude-glob vendor \
+              ./ '$FTP_PATH';
+            bye
+          "
 
       - name: Notify on success
         if: success()
@@ -53,4 +52,4 @@ jobs:
 
       - name: Notify on failure
         if: failure()
-        run: echo "❌ Deploy failed — check FTP secrets and server-dir path in repo Settings → Secrets."
+        run: echo "❌ Deploy failed — check FTP secrets in repo Settings → Secrets."
