@@ -1,7 +1,10 @@
 <?php
 /**
- * Customizer Manager — registers the panel, collects all sections,
- * outputs the unified CSS variables block, and enqueues preview/control JS.
+ * Customizer Manager — registers the Axiom panel and all active sections.
+ *
+ * Sections intentionally excluded (colours, typography, container widths) are
+ * left to page builders and the theme's CSS custom properties so they don't
+ * conflict with builder settings.
  *
  * @package Axiom\Customizer
  */
@@ -10,9 +13,6 @@ declare( strict_types=1 );
 
 namespace Axiom\Customizer;
 
-use Axiom\Customizer\Sections\Colors;
-use Axiom\Customizer\Sections\Typography;
-use Axiom\Customizer\Sections\Container;
 use Axiom\Customizer\Sections\Header;
 use Axiom\Customizer\Sections\Footer;
 use Axiom\Customizer\Sections\Page_Title_Bar;
@@ -31,9 +31,6 @@ final class Manager {
 
 	public function __construct() {
 		$this->sections = [
-			new Colors(),
-			new Typography(),
-			new Container(),
 			new Header(),
 			new Footer(),
 			new Page_Title_Bar(),
@@ -46,7 +43,7 @@ final class Manager {
 	public function register( \WP_Customize_Manager $wp_customize ): void {
 		$wp_customize->add_panel( 'axiom_theme', [
 			'title'       => esc_html__( 'Axiom Theme', 'axiom' ),
-			'description' => esc_html__( 'Visual, layout, performance and SEO settings.', 'axiom' ),
+			'description' => esc_html__( 'Performance, SEO, and structural settings. Visual styling is handled by your page builder or Custom CSS.', 'axiom' ),
 			'priority'    => 10,
 		] );
 

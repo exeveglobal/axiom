@@ -39,14 +39,15 @@ final class Theme {
 		$customizer = new Customizer_Manager();
 
 		$this->hooks
-			->action( 'after_setup_theme', [ $this, 'setup' ] )
-			->action( 'after_setup_theme', [ $this, 'content_width' ], 0 )
-			->action( 'wp_enqueue_scripts', [ $assets, 'enqueue_frontend' ] )
-			->action( 'admin_enqueue_scripts', [ $assets, 'enqueue_admin' ] )
-			->action( 'customize_register', [ $customizer, 'register' ] )
-			->action( 'customize_preview_init', [ $customizer, 'enqueue_preview' ] )
+			->action( 'after_setup_theme',                  [ $this, 'setup' ] )
+			->action( 'after_setup_theme',                  [ $this, 'content_width' ], 0 )
+			->action( 'widgets_init',                       [ $this, 'register_widgets' ] )
+			->action( 'wp_enqueue_scripts',                 [ $assets, 'enqueue_frontend' ] )
+			->action( 'admin_enqueue_scripts',              [ $assets, 'enqueue_admin' ] )
+			->action( 'customize_register',                 [ $customizer, 'register' ] )
+			->action( 'customize_preview_init',             [ $customizer, 'enqueue_preview' ] )
 			->action( 'customize_controls_enqueue_scripts', [ $customizer, 'enqueue_controls' ] )
-			->action( 'wp_head', [ $customizer, 'output_css_variables' ], 5 )
+			->action( 'wp_head',                            [ $customizer, 'output_css_variables' ], 5 )
 			->register();
 
 		( new Performance_Module() )->register();
@@ -78,12 +79,25 @@ final class Theme {
 
 		register_nav_menus( [
 			'primary' => esc_html__( 'Primary Navigation', 'axiom' ),
-			'footer'  => esc_html__( 'Footer Navigation', 'axiom' ),
 		] );
 	}
 
 	public function content_width(): void {
-		$GLOBALS['content_width'] = (int) get_theme_mod( 'axiom_content_width', 800 );
+		$GLOBALS['content_width'] = 1140;
+	}
+
+	public function register_widgets(): void {
+		for ( $i = 1; $i <= 4; $i++ ) {
+			register_sidebar( [
+				'name'          => sprintf( esc_html__( 'Footer Column %d', 'axiom' ), $i ),
+				'id'            => 'footer-' . $i,
+				'description'   => sprintf( esc_html__( 'Footer widget area %d of 4.', 'axiom' ), $i ),
+				'before_widget' => '<div id="%1$s" class="axiom-widget %2$s">',
+				'after_widget'  => '</div>',
+				'before_title'  => '<h3 class="axiom-widget__title">',
+				'after_title'   => '</h3>',
+			] );
+		}
 	}
 
 	public function __clone() {
