@@ -2,6 +2,8 @@
 /**
  * Comments template.
  *
+ * Required by WordPress since 3.0 — must exist in every theme.
+ *
  * @package Axiom
  */
 
