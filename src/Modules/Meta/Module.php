@@ -131,11 +131,10 @@ final class Module {
 
 	private function fields(): array {
 		return [
-			'hide_title_bar'     => [ 'type' => 'checkbox', 'label' => 'Hide Page Title Bar', 'description' => 'Overrides the global setting for this page.' ],
-			'subtitle'           => [ 'type' => 'text',     'label' => 'Page Subtitle',       'description' => 'Displayed beneath the page title in the title bar.' ],
-			'ptb_bg_image'       => [ 'type' => 'image',    'label' => 'Title Bar Background Image', 'description' => 'Overrides the global title bar background.' ],
-			'breadcrumb_label'   => [ 'type' => 'text',     'label' => 'Custom Breadcrumb Label', 'description' => 'Replaces the auto-generated breadcrumb text for this page.' ],
-			'body_class'         => [ 'type' => 'text',     'label' => 'Extra Body CSS Class', 'description' => 'Adds a custom class to <body> for this page only.' ],
+			'hide_title_bar'   => [ 'type' => 'checkbox', 'label' => 'Hide Page Title Bar',      'description' => 'Overrides the global setting for this page.' ],
+			'subtitle'         => [ 'type' => 'text',     'label' => 'Page Subtitle',             'description' => 'Displayed beneath the page title in the title bar.' ],
+			'breadcrumb_label' => [ 'type' => 'text',     'label' => 'Custom Breadcrumb Label',   'description' => 'Replaces the auto-generated breadcrumb text for this page.' ],
+			'body_class'       => [ 'type' => 'text',     'label' => 'Extra Body CSS Class',      'description' => 'Adds a custom class to <body> for this page only.' ],
 		];
 	}
 }

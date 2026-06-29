@@ -26,20 +26,3 @@ function axiom_body_classes(): array {
 
 	return $classes;
 }
-
-/**
- * Returns the page title, accounting for archive context.
- */
-function axiom_page_title(): string {
-	if ( is_archive() ) {
-		return get_the_archive_title();
-	}
-	if ( is_search() ) {
-		return sprintf(
-			/* translators: %s: search query */
-			esc_html__( 'Search: %s', 'axiom' ),
-			get_search_query()
-		);
-	}
-	return (string) get_the_title();
-}

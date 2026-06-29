@@ -22,7 +22,6 @@ final class Performance extends Abstract_Section {
 		'perf_disable_rest_link'    => [ 'label' => 'Remove REST API Link from Head',    'type' => 'checkbox', 'default' => true,  'transport' => 'refresh' ],
 		'perf_lazy_images'          => [ 'label' => 'Native Lazy Load Images',           'type' => 'checkbox', 'default' => true,  'transport' => 'refresh', 'description' => 'Adds loading="lazy" to all images.' ],
 		'perf_defer_js'             => [ 'label' => 'Defer Non-Critical Scripts',        'type' => 'checkbox', 'default' => true,  'transport' => 'refresh' ],
-		'perf_preload'              => [ 'label' => 'Preload',                           'type' => 'select',   'default' => 'fonts', 'transport' => 'refresh', 'choices' => [ 'none' => 'Nothing', 'fonts' => 'Fonts Only', 'fonts_hero' => 'Fonts + Hero Image' ] ],
 		'perf_dns_prefetch'         => [ 'label' => 'DNS Prefetch Domains (one per line)', 'type' => 'textarea', 'default' => '', 'transport' => 'refresh', 'description' => 'e.g. fonts.googleapis.com' ],
 	];
 
