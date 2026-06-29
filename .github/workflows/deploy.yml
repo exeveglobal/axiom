@@ -3,15 +3,15 @@ name: Deploy to Dev
 on:
   push:
     branches:
-      - main
+      - main          # fires when dev is merged into main
 
 concurrency:
   group: deploy-dev
-  cancel-in-progress: true
+  cancel-in-progress: true   # cancel any in-flight deploy if a new push arrives
 
 jobs:
   deploy:
-    name: FTP Deploy → Dev
+    name: FTPS Deploy → Hostinger Dev
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -19,19 +19,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2   # needed for changed-files diff
+          fetch-depth: 0   # full history so the action can diff against the previous deploy
 
-      - name: Deploy via FTP
+      - name: Deploy via FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server:           ${{ secrets.DEV_FTP_HOST }}
-          username:         ${{ secrets.DEV_FTP_USER }}
-          password:         ${{ secrets.DEV_FTP_PASS }}
-          port:             ${{ secrets.DEV_FTP_PORT || 21 }}
-          server-dir:       ${{ secrets.DEV_FTP_PATH }}   # e.g. /public_html/wp-content/themes/axiom/
-          local-dir:        ./
-          protocol:         ftps          # use 'ftp' if your host does not support FTPS
-          security:         strict
+          server:      ${{ secrets.DEV_FTP_HOST }}
+          username:    ${{ secrets.DEV_FTP_USER }}
+          password:    ${{ secrets.DEV_FTP_PASS }}
+          port:        21
+          server-dir:  ${{ secrets.DEV_FTP_PATH }}
+          # ^ e.g. /public_html/wp-content/themes/axiom/
+          # Make sure the trailing slash is present.
+          local-dir:   ./
+          protocol:    ftps
+          security:    loose
+          # 'loose' is required for Hostinger shared hosting — their shared FTP
+          # certificate does not pass strict TLS verification.
+          state-name:  .ftp-deploy-sync-state.json
+          # Tracks which files were last uploaded so only changed files are
+          # re-uploaded on subsequent deploys (not a full sync every time).
           exclude: |
             **/.git*
             **/.git*/**
@@ -40,12 +47,12 @@ jobs:
             **/.DS_Store
             **/.env*
             **/vendor/**
-            README.md
+            .ftp-deploy-sync-state.json
 
       - name: Notify on success
         if: success()
-        run: echo "✅ Axiom deployed to dev at $(date -u '+%Y-%m-%d %H:%M UTC')"
+        run: echo "✅ Axiom deployed to dev — $(date -u '+%Y-%m-%d %H:%M UTC')"
 
       - name: Notify on failure
         if: failure()
-        run: echo "❌ Deploy failed. Check FTP credentials and server path in repo secrets."
+        run: echo "❌ Deploy failed — check FTP secrets and server-dir path in repo Settings → Secrets."
