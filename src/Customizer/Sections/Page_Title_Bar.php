@@ -22,7 +22,7 @@ final class Page_Title_Bar extends Abstract_Section {
 		'ptb_hide_on_front' => [
 			'label'     => 'Hide on Homepage',
 			'type'      => 'checkbox',
-			'default'   => false,
+			'default'   => true,
 			'transport' => 'refresh',
 			'active_cb' => 'ptb_enabled',
 		],
