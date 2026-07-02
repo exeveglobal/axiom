@@ -91,7 +91,7 @@ The Page Title Bar (PTB) is the section that appears at the top of each page sho
 | Setting | Default | Description |
 |---------|---------|-------------|
 | Enable Page Title Bar | On | Shows or hides the title bar globally across the site. |
-| Hide on Homepage | Off | Suppresses the title bar only on the front page, while keeping it active on all other pages. |
+| Hide on Homepage | On | Suppresses the title bar only on the front page, while keeping it active on all other pages. |
 | Alignment | Left | Sets the text alignment of the title and breadcrumb. Options: Left, Center, Right. |
 | Show Breadcrumb | On | Displays the breadcrumb trail above the page title. |
 
