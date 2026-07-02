@@ -13,7 +13,7 @@ jobs:
   deploy:
     name: FTP Deploy → Hostinger Dev
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -33,8 +33,11 @@ jobs:
           set -e
 
           FTP_HEADER="set ftp:ssl-allow no
+          set ftp:passive-mode yes
           set net:timeout 30
-          set net:max-retries 3"
+          set net:max-retries 3
+          set net:reconnect-interval-base 5
+          set net:reconnect-interval-multiplier 1"
 
           # ── Initial deploy: no parent commit exists ───────────────────────────
           if ! git rev-parse HEAD~1 >/dev/null 2>&1; then
