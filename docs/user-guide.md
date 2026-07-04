@@ -208,6 +208,8 @@ Axiom is designed to be invisible to page builders.
 
 **Disabling the PTB for builder pages:** Use the *Hide Page Title Bar* checkbox in the Axiom Page Settings metabox on each builder page, or disable the PTB globally in the Customizer if you are building a full-site design.
 
+**If a builder's widgets misbehave (JS errors, animations/popups not firing):** turn off *Defer Non-Critical Scripts* and *Remove jQuery Migrate* in [Performance](#44-performance) and retest. Both ship enabled by default and defer/strip scripts theme-wide, which can interfere with a builder's own runtime JS. Re-enable them one at a time afterward if you want to keep the perf win and confirm each is actually safe with your specific widget mix.
+
 ---
 
 ## 8. Navigation Menus
@@ -288,5 +290,5 @@ Example — change the header background and link colour globally:
 | **WooCommerce** | Axiom has no WooCommerce templates — WooCommerce uses its own. The theme container and header/footer render normally on shop pages. |
 | **WP Rocket / LiteSpeed Cache / NitroPack** | These plugins duplicate several of Axiom's Performance options (emoji, jQuery, defer). Enable each optimisation in one place only. |
 | **Action Scheduler** (via WooCommerce, etc.) | Axiom registers all its hooks on or after `init` to avoid any conflict with Action Scheduler's data store initialisation. |
-| **Elementor** | Fully compatible. Full-width sections work without extra configuration. |
+| **Elementor** | Fully compatible. Full-width sections work without extra configuration. If widgets misbehave, disable *Defer Non-Critical Scripts* and *Remove jQuery Migrate* first (see [section 7](#7-page-builder-usage)). |
 | **Contact Form 7 / Gravity Forms** | No conflicts. Form styles inherit the theme's neutral input defaults. |

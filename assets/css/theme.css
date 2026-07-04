@@ -636,8 +636,10 @@ input[type="submit"]:hover,
 .alignfull  { margin-inline: calc(50% - 50vw); max-width: 100vw; width: 100vw; }
 
 /* ── Page Builder Compatibility ──────────────────────────────────────────────── */
-/* Elementor: let full-width sections escape the theme container */
-.elementor-page .axiom-main,
+/* Elementor: let full-width sections escape the theme container.
+   Elementor never outputs a bare "elementor-page" class — it suffixes the
+   post ID (elementor-page-123), so match on that prefix instead. */
+[class*="elementor-page-"] .axiom-main,
 .fl-builder-edit .axiom-main {
 	max-width: none;
 	padding: 0;
